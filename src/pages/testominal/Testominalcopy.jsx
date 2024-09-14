@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { MdDelete } from "react-icons/md";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import Spinner from "../../components/Spinner"; 
+import Spinner from "../../components/Spinner";
 
 function Testimonial() {
     const {
