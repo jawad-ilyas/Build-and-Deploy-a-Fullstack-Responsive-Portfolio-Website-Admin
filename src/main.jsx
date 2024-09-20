@@ -10,7 +10,7 @@ import Home from './pages/Home.jsx';
 import Testimonial from './pages/testominal/Testominal.jsx';
 import { Provider } from 'react-redux';
 import { store } from './store/Store.js';
-// import Testimonial from './pages/testominal/Testominal2.jsx';
+import { About } from './pages/index.js';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "testominal",
         element: <Testimonial />
+      },
+      {
+        path : "about",
+        element : <About />
       }
     ]
   },
@@ -31,7 +35,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} >
-        <App />
+      
       </RouterProvider>
     </Provider>
   </StrictMode>,

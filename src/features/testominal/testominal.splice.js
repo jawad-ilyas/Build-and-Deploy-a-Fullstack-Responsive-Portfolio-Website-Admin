@@ -13,7 +13,7 @@ export const fetchTestimonials = createAsyncThunk(
     'testimonial/fetchTestimonials',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${ApiUrl}/api/v1/testimonial/fetchTestimonial`);
+            const response = await axios.get(`${ApiUrl}/testimonial/fetchTestimonial`);
             return response.data.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -27,7 +27,7 @@ export const deleteTestimonial = createAsyncThunk(
     'testimonial/deleteTestimonial',
     async (id, { rejectWithValue }) => {
         try {
-            await axios.delete(`${ApiUrl}/api/v1/testimonial/deleteTestimonial/${id}`);
+            await axios.delete(`${ApiUrl}/testimonial/deleteTestimonial/${id}`);
             return id;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -40,7 +40,7 @@ export const createTestimonial = createAsyncThunk(
     'testimonial/createTestimonial',
     async (formData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${ApiUrl}/api/v1/testimonial/createTestimonial`, formData, {
+            const response = await axios.post(`${ApiUrl}/testimonial/createTestimonial`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -56,7 +56,7 @@ export const updateTestimonial = createAsyncThunk(
     async ({ id, updatedData }, { rejectWithValue }) => {
         try {
             console.log("testimonial splice :: updateTestimonial :: updateData ", updatedData)
-            const response = await axios.put(`${ApiUrl}/api/v1/testimonial/updateTestimonial/${id}`, updatedData);
+            const response = await axios.put(`${ApiUrl}/testimonial/updateTestimonial/${id}`, updatedData);
             return response.data.data;  // The updated testimonial
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -100,9 +100,7 @@ export const testominalSlice = createSlice({
             // Update Testimonial
             .addCase(updateTestimonial.fulfilled, (state, action) => {
                 const updatedTestimonial = action.payload;
-                state.testimonials = state.testimonials.map((test) =>
-                    test._id === updatedTestimonial._id ? updatedTestimonial : test
-                );
+                state.testimonials = state.testimonials.map((test) => test._id === updatedTestimonial._id ? updatedTestimonial : test );
             })
             .addCase(updateTestimonial.rejected, (state, action) => {
                 state.error = action.payload;
