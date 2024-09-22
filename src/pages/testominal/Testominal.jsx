@@ -98,8 +98,6 @@ function Testimonial() {
     const handleEditClick = (testimonial) => {
         setIsEditing(true);
         setEditId(testimonial._id); // Set the ID of the testimonial being edited
-
-        // Populate form fields with existing data
         setValue("name", testimonial.name);
         setValue("company", testimonial.company);
         setValue("feedback", testimonial.feedback);
