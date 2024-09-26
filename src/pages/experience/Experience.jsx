@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetchWorkExperience } from "../../features/workExperience/WorkExperience.slice";
-import { createExperience, deleteExperience, fetchExperiences, updateExperience } from "../../features/experience/experience.slice";
+import { createExperience, deleteExperience, fetchExperiences, updateExperience } from "../../features/experience/Experience.slice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
