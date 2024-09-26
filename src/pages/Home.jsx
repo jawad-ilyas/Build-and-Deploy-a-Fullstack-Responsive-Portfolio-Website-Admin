@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-const testimonialImg = "";  // Add images specific to each section
-const aboutImg = "";
-const workImg = "";
-const contactImg = "";
-const brandImg = "";
-const skillImg = "";
-const workExperienceImg = "";
-const experienceImg = "";
+import testimonialImg from "../assets/testimonial.webp" ;  // Add images specific to each section
+import aboutImg from "../assets/about.webp";
+import workImg from "../assets/workExperience.webp";
+import contactImg from "../assets/image.jpeg";
+import brandImg from "../assets/brand.webp";
+import skillImg from "../assets/skill.webp";
+import workExperienceImg from "../assets/workExperience.webp";
+import experienceImg from "../assets/workExperience.webp";
 
 function Home() {
   return (
