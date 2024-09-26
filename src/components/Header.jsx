@@ -7,7 +7,7 @@ function Header() {
         {/* Brand/Logo */}
         <div className="text-2xl font-bold">
           <NavLink to="/" className="hover:text-gray-200">
-            MyWebsite
+            JMD Admin Section
           </NavLink>
         </div>
 
@@ -69,6 +69,13 @@ function Header() {
             activeClassName="border-b-2 border-white"
           >
             Work Experience
+          </NavLink>
+          <NavLink
+            to="/experience"
+            className="hover:text-gray-200 transition"
+            activeClassName="border-b-2 border-white"
+          >
+            Experience
           </NavLink>
         </div>
       </nav>

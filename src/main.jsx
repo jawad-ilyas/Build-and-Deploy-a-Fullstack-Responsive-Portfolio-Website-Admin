@@ -10,7 +10,7 @@ import Home from './pages/Home.jsx';
 import Testimonial from './pages/testominal/Testominal.jsx';
 import { Provider } from 'react-redux';
 import { store } from './store/Store.js';
-import { About, Work, Skill, Contact, Brand, WorkExperience } from './pages/index.js';
+import { About, Work, Skill, Contact, Brand, WorkExperience, Experience } from './pages/index.js';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -52,6 +52,11 @@ const router = createBrowserRouter([
       {
         path: "workExperience",
         element: <WorkExperience />
+      }
+      ,
+      {
+        path: "experience",
+        element: <Experience />
       }
     ]
   },
