@@ -1,10 +1,8 @@
 import { useForm } from "react-hook-form";
 import placeHolderImg from "../../assets/image.jpeg";
 import { useEffect, useState } from "react";
-import { CiEdit } from "react-icons/ci";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { MdDelete } from "react-icons/md";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import Spinner from "../../components/Spinner";
@@ -18,10 +16,9 @@ function Testimonial() {
 
     const [image, setImage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isEditing, setIsEditing] = useState(false); // New state to track if we are editing
-    const [editId, setEditId] = useState(null); // Track the ID of the testimonial being edited
+    const [isEditing, setIsEditing] = useState(false);
+    const [editId, setEditId] = useState(null);
 
-    // Notifications
     const notifySuccess = (message) => toast.success(message, {
         position: "bottom-right",
         theme: "dark",
@@ -32,7 +29,6 @@ function Testimonial() {
         theme: "dark",
     });
 
-    // Sweet Alert Popup for Deletion
     const showDeleteConfirmation = (id) => {
         withReactContent(Swal).fire({
             title: "Are you sure?",
@@ -55,7 +51,6 @@ function Testimonial() {
         dispatch(fetchTestimonials());
     }, [dispatch]);
 
-    // Handle Form Submission
     const onSubmit = async (data) => {
         setIsSubmitting(true);
         const formData = new FormData();
@@ -63,22 +58,21 @@ function Testimonial() {
         formData.append("company", data.company);
         formData.append("feedback", data.feedback);
         if (data.testimonialImg[0]) {
-            formData.append("testimonialImg", data.testimonialImg[0]); // Only append if a new image is uploaded
+            formData.append("testimonialImg", data.testimonialImg[0]);
         }
 
         if (isEditing) {
             dispatch(updateTestimonial({ id: editId, updatedData: formData }))
                 .then(() => {
                     notifySuccess("Testimonial updated successfully!");
-                    resetForm(); // Reset form after successful update
+                    resetForm();
                 })
                 .catch(() => notifyError("Failed to update testimonial."));
         } else {
-            // If not editing, dispatch the create action
             dispatch(createTestimonial(formData))
                 .then(() => {
                     reset();
-                    setImage(""); // Clear image preview
+                    setImage("");
                     notifySuccess("New testimonial created!");
                 })
                 .catch(() => notifyError("Failed to create testimonial."));
@@ -86,7 +80,6 @@ function Testimonial() {
         setIsSubmitting(false);
     };
 
-    // Handle Image Change
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -94,17 +87,15 @@ function Testimonial() {
         }
     };
 
-    // Handle Edit Button Click
     const handleEditClick = (testimonial) => {
         setIsEditing(true);
-        setEditId(testimonial._id); // Set the ID of the testimonial being edited
+        setEditId(testimonial._id);
         setValue("name", testimonial.name);
         setValue("company", testimonial.company);
         setValue("feedback", testimonial.feedback);
-        setImage(testimonial.testimonialImg); // Set image preview to current testimonial image
+        setImage(testimonial.testimonialImg);
     };
 
-    // Reset form after updating/creating
     const resetForm = () => {
         reset();
         setImage("");
@@ -113,74 +104,138 @@ function Testimonial() {
     };
 
     return (
-        <div className="flex flex-row">
-            {/* Sidebar */}
-            <div className="w-1/3 h-screen overflow-y-auto p-4">
-                {isLoading ? (
-                    <Spinner /> // Loading state indicator
-                ) : (
-                    testimonials?.map((test) => (
-                        <div key={test?._id} className="flex flex-row justify-between items-center border border-gray-300 p-2 my-2">
-                            <div className="flex flex-row">
-                                <img src={test?.testimonialImg} className="size-12 rounded object-cover" alt={test?.company} />
-                                <div className="ml-2">
-                                    <div className="font-semibold">{test?.company}</div>
-                                    <div>{test?.feedback}</div>
+        <div className="flex flex-col lg:flex-row bg-gray-100 min-h-screen p-4 lg:p-8">
+            {/* Sidebar: List of Testimonials */}
+            <div className="lg:w-1/3 w-full p-4">
+                <div className="flex flex-col space-y-4">
+                    {isLoading ? (
+                        <Spinner />
+                    ) : (
+                        testimonials?.map((test) => (
+                            <div
+                                key={test?._id}
+                                className="flex flex-col bg-white shadow hover:shadow-lg transition-shadow duration-300 p-5 rounded-lg"
+                            >
+                                <img
+                                    src={test?.testimonialImg || placeHolderImg}
+                                    className="w-full h-96 object-cover rounded-md mb-4"
+                                    alt={test?.company}
+                                />
+                                <h1 className="text-center text-xl font-bold text-gray-700">
+                                    {test?.company}
+                                </h1>
+                                <p className="text-center text-sm text-gray-500 mt-2">
+                                    {test?.feedback}
+                                </p>
+                                <div className="flex justify-between mt-4">
+                                    <button
+                                        className="text-green-500 hover:text-green-600 font-semibold"
+                                        onClick={() => handleEditClick(test)}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        className="text-red-500 hover:text-red-600 font-semibold"
+                                        onClick={() => showDeleteConfirmation(test?._id)}
+                                    >
+                                        Delete
+                                    </button>
                                 </div>
                             </div>
-                            <div className="px-2 flex flex-row space-x-1">
-                                <CiEdit size={30} className="cursor-pointer" onClick={() => handleEditClick(test)} />
-                                <MdDelete size={30} className="hover:text-red-600 cursor-pointer" onClick={() => showDeleteConfirmation(test?._id)} />
-                            </div>
-                        </div>
-                    ))
-                )}
+                        ))
+                    )}
+                </div>
             </div>
 
-            {/* Form section */}
-            <div className="w-2/3 h-screen p-4 flex flex-col items-center justify-center">
-                <h1 className="font-bold text-4xl font-mono mb-3">{isEditing ? "Edit Testimonial" : "Enter A Testimonial"}</h1>
-                <form
-                    encType="multipart/form-data"
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col w-2/3 space-y-4"
-                >
-                    <input
-                        placeholder="Name"
-                        className="border border-black p-2 rounded w-full"
-                        {...register("name", { required: "Name is required" })}
-                    />
-                    {errors.name && <span>{errors.name.message}</span>}
+            {/* Right Panel: Form */}
+            <div className="lg:w-2/3 w-full p-4">
+                <div className="max-w-3xl mx-auto bg-white p-6 lg:p-8 rounded-lg shadow-lg">
+                    <h1 className="text-center text-2xl font-bold text-gray-700 mb-6">
+                        {isEditing ? "Edit Testimonial" : "Enter A Testimonial"}
+                    </h1>
+                    <form
+                        encType="multipart/form-data"
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-6"
+                    >
+                        <div className="flex flex-col space-y-2">
+                            <label htmlFor="name" className="text-lg font-semibold text-gray-700">
+                                Name:
+                            </label>
+                            <input
+                                id="name"
+                                className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                type="text"
+                                placeholder="Enter name"
+                                {...register("name", { required: "Name is required" })}
+                            />
+                            {errors.name && (
+                                <span className="text-red-500 text-sm">{errors.name.message}</span>
+                            )}
+                        </div>
 
-                    <input
-                        placeholder="Company"
-                        className="border border-black p-2 rounded w-full"
-                        {...register("company", { required: "Company is required" })}
-                    />
-                    {errors.company && <span>{errors.company.message}</span>}
+                        <div className="flex flex-col space-y-2">
+                            <label htmlFor="company" className="text-lg font-semibold text-gray-700">
+                                Company:
+                            </label>
+                            <input
+                                id="company"
+                                className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                type="text"
+                                placeholder="Enter company"
+                                {...register("company", { required: "Company is required" })}
+                            />
+                            {errors.company && (
+                                <span className="text-red-500 text-sm">{errors.company.message}</span>
+                            )}
+                        </div>
 
-                    <textarea
-                        placeholder="Feedback"
-                        className="border border-black p-2 rounded w-full"
-                        {...register("feedback", { required: "Feedback is required" })}
-                    />
-                    {errors.feedback && <span>{errors.feedback.message}</span>}
+                        <div className="flex flex-col space-y-2">
+                            <label htmlFor="feedback" className="text-lg font-semibold text-gray-700">
+                                Feedback:
+                            </label>
+                            <textarea
+                                id="feedback"
+                                rows="4"
+                                className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter feedback"
+                                {...register("feedback", { required: "Feedback is required" })}
+                            />
+                            {errors.feedback && (
+                                <span className="text-red-500 text-sm">{errors.feedback.message}</span>
+                            )}
+                        </div>
 
-                    {/* Image Upload */}
-                    <div className="cursor-pointer border p-2">
-                        <img src={image ? image : placeHolderImg} alt="Preview" className="w-40 h-40 object-cover" />
-                        <input
-                            type="file"
-                            {...register("testimonialImg", { required: !isEditing ? "Image is required" : false })} // Image required only for new testimonials
-                            onChange={handleImageChange}
-                        />
-                        {errors.testimonialImg && <span>{errors.testimonialImg.message}</span>}
-                    </div>
-                    <ToastContainer />
-                    <button type="submit" className="bg-blue-500 text-white py-2 w-24 rounded" disabled={isSubmitting}>
-                        {isSubmitting ? "Submitting..." : isEditing ? "Update" : "Submit"}
-                    </button>
-                </form>
+                        <div className="flex flex-col space-y-2">
+                            <label htmlFor="testimonialImg" className="text-lg font-semibold text-gray-700">
+                                Testimonial Image:
+                            </label>
+                            <div className="flex items-center space-x-4">
+                                <img src={image || placeHolderImg} alt="Preview" className="w-20 h-20 object-cover rounded-md" />
+                                <input
+                                    id="testimonialImg"
+                                    type="file"
+                                    {...register("testimonialImg", { required: !isEditing ? "Image is required" : false })}
+                                    onChange={handleImageChange}
+                                    className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            {errors.testimonialImg && (
+                                <span className="text-red-500 text-sm">{errors.testimonialImg.message}</span>
+                            )}
+                        </div>
+
+                        <ToastContainer />
+
+                        <button
+                            type="submit"
+                            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? "Submitting..." : isEditing ? "Update" : "Submit"}
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 
 const ContainerForMainSection = ({ children, className }) => {
     return (
-        <div className={`bg-gray-200 flex items-center justify-center w-full ${className} `}>
+        <div className={`bg-gray-200  ${className} `}>
             {children}
         </div>
     )
